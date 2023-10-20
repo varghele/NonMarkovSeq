@@ -1,7 +1,7 @@
 import torch
 from torch.nn import Sequential as Seq, Linear as Lin
 from torch_geometric.nn import MetaLayer
-from torch_geometric.utils import scatter
+from edge_model import EdgeModel
 
 
 class GNN(torch.nn.Module):
@@ -30,10 +30,8 @@ class GNN(torch.nn.Module):
         self.meta = MetaLayer(
             EdgeModel(self.num_edge_feats, self.num_node_feats, self.num_hid_layers, self.size_hid_layers,
                       self.activation, self.norm),
-            NodeModel(self.num_edge_feats, self.num_node_feats, self.num_hid_layers, self.size_hid_layers,
-                      self.activation, self.norm),
-            GlobalModel(self.num_edge_feats, self.num_node_feats, self.num_global_feats, self.num_hid_layers,
-                        self.size_hid_layers, self.activation, self.norm))
+            None,
+            None)
 
         # MLP that calculates the output from the graph features
         # Could also do Seq([*module_list])
