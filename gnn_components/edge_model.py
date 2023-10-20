@@ -3,7 +3,8 @@ from torch.nn import Sequential as Seq, Linear as Lin
 
 
 class EdgeModel(torch.nn.Module):
-    def __init__(self, num_edge_feats, num_node_feats, num_hid_layers, size_hid_layers, activation=None, norm=None):
+    def __init__(self, num_edge_feats, num_node_feats, num_global_feats, num_hid_layers, size_hid_layers,
+                 activation=None, norm=None):
         super(EdgeModel, self).__init__()
 
         self.num_edge_feats = num_edge_feats
