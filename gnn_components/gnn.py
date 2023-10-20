@@ -2,6 +2,7 @@ import torch
 from torch.nn import Sequential as Seq, Linear as Lin
 from torch_geometric.nn import MetaLayer
 from edge_model import EdgeModel
+from mlp import MLP
 
 
 class GNN(torch.nn.Module):
@@ -15,6 +16,14 @@ class GNN(torch.nn.Module):
 
         self.num_hid_layers = num_hid_layers
         self.size_hid_layers = size_hid_layers
+        self.activation = activation
+        self.norm = norm
+
+        # Load MLP
+
+        # Load Edge_model
+        self.edge_model = EdgeModel(num_edge_feats, num_node_feats, num_global_feats, edge_mlp_node, edge_mlp_all,
+                 activation=None, norm=None)
 
         self.num_mlp_layers = num_mlp_layers
         self.size_mlp_layers = size_mlp_layers
@@ -24,37 +33,13 @@ class GNN(torch.nn.Module):
 
         self.device = device
 
-        self.activation = activation
-        self.norm = norm
+
 
         self.meta = MetaLayer(
             EdgeModel(self.num_edge_feats, self.num_node_feats, self.num_hid_layers, self.size_hid_layers,
                       self.activation, self.norm),
             None,
             None)
-
-        # MLP that calculates the output from the graph features
-        # Could also do Seq([*module_list])
-        if self.size_mlp_layers > 0:
-            self.last_mlp = Seq()
-            # Add first input layer
-            self.last_mlp.add_module(f"Lin{0}", Lin(self.num_global_feats, self.size_mlp_layers))
-            if self.activation is not None:
-                self.last_mlp.add_module(f"Act{0}", self.activation)
-            if self.norm is not None:
-                self.last_mlp.add_module(f"Norm{0}", self.norm(self.size_mlp_layers))
-
-            # Hidden layers
-            for l in range(1, self.num_mlp_layers):
-                self.last_mlp.add_module(f"Lin{l}", Lin(self.size_mlp_layers, self.size_mlp_layers))
-                if self.activation is not None:
-                    self.last_mlp.add_module(f"Act{l}", self.activation)
-                if self.norm is not None:
-                    self.last_mlp.add_module(f"Norm{l}", self.norm(self.size_mlp_layers))
-            # Add last layer
-            self.last_mlp.add_module(f"Lin{self.num_mlp_layers}", Lin(self.size_mlp_layers, self.num_outputs))
-        else:
-            self.last_mlp = Seq(Lin(self.num_global_feats, self.num_outputs))
 
         # Initialize MLP
         self.last_mlp.apply(init_weights)
