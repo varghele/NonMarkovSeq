@@ -23,7 +23,7 @@ class GNN(torch.nn.Module):
 
         # Load Edge_model
         self.edge_model = EdgeModel(num_edge_feats, num_node_feats, num_global_feats, edge_mlp_node, edge_mlp_all,
-                 activation=None, norm=None)
+                                    activation=None, norm=None)
 
         self.num_mlp_layers = num_mlp_layers
         self.size_mlp_layers = size_mlp_layers
