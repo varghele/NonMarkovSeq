@@ -55,4 +55,4 @@ class GNN(torch.nn.Module):
         grph.edge_attr = ea
 
         # Run MLP on output
-        return grph
+        return ea
