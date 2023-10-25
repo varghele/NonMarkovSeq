@@ -44,10 +44,10 @@ class GNN(torch.nn.Module):
         self.meta = MetaLayer(self.edge_model, None, None)
 
     def forward(self, grph):
-        # Extract all from MiniBatch graph
+        # extract all from MiniBatch graph
         x, ei, ea, u, btc = grph.x, grph.edge_index, grph.edge_attr, grph.y, grph.batch
 
-        # Do message passing
+        # do message passing
         for _ in range(self.num_mp):
             x, ea, u = self.meta(x=x, edge_index=ei, edge_attr=ea, u=u, batch=btc)
 
@@ -55,4 +55,4 @@ class GNN(torch.nn.Module):
         grph.edge_attr = ea
 
         # Run MLP on output
-        return ea
+        return grph
