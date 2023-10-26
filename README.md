@@ -1,1 +1,1 @@
-# GNN-RecEdges
+# NonMarkovSeq
