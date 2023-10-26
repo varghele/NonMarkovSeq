@@ -15,7 +15,7 @@ class NonMarkov(torch.nn.Module):
         self.num_blocks = num_blocks
 
         # Add independent GNN blocks to model
-        for k in range(1,self.num_blocks+1):
+        for k in range(1, self.num_blocks+1):
             self.NonMarkov.add_module(f"MLP{k}", MLP(num_inputs, num_outputs, num_hid_layers, size_hid_layers,
                                                      activation, normalization))
 
